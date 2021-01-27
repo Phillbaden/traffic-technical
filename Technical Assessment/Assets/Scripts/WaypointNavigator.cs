@@ -6,6 +6,7 @@ public class WaypointNavigator : MonoBehaviour
 {
     NavigationController controller;
     public Waypoint currentWaypoint;
+    int direction;
 
     private void Awake()
     {
@@ -14,6 +15,7 @@ public class WaypointNavigator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        direction = Mathf.RoundToInt(Random.Range(0f, 1f));
         controller.SetDestination(currentWaypoint.GetPosition());
     }
 
@@ -22,7 +24,44 @@ public class WaypointNavigator : MonoBehaviour
     {
         if (controller.reachedDestination)
         {
-            currentWaypoint = currentWaypoint.nextWaypoint;
+            bool shouldBranch = false;
+
+            if (currentWaypoint.branches != null && currentWaypoint.branches.Count > 0)
+            {
+                shouldBranch = Random.Range(0f, 1f) <= currentWaypoint.branchRatio ? true : false;
+            }
+
+            if (shouldBranch)
+            {
+                currentWaypoint = currentWaypoint.branches[Random.Range(0, currentWaypoint.branches.Count - 1)];
+            }
+            else
+            {
+                if (direction == 0)
+                {
+                    if (currentWaypoint.nextWaypoint != null)
+                    {
+                        currentWaypoint = currentWaypoint.nextWaypoint;
+                    }
+                    else
+                    {
+                        currentWaypoint = currentWaypoint.previousWaypoint;
+                        direction = 1;
+                    }
+                }
+                else if (direction == 1)
+                {
+                    if (currentWaypoint.previousWaypoint != null)
+                    {
+                        currentWaypoint = currentWaypoint.previousWaypoint;
+                    }
+                    else
+                    {
+                        currentWaypoint = currentWaypoint.nextWaypoint;
+                        direction = 0;
+                    }
+                }
+            }
             controller.SetDestination(currentWaypoint.GetPosition());
         }
     }

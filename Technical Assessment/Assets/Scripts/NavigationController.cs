@@ -15,7 +15,7 @@ public class NavigationController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        movementSpeed = Random.Range(0.2f, 0.5f);
     }
 
     // Update is called once per frame
@@ -42,10 +42,7 @@ public class NavigationController : MonoBehaviour
 
             velocity = (transform.position - lastPosition) / Time.deltaTime;
             velocity.y = 0;
-            var velocityMagnitude = velocity.magnitude;
             velocity = velocity.normalized;
-            var fwdDotProduct = Vector3.Dot(transform.forward, velocity);
-            var rightDotProduct = Vector3.Dot(transform.right, velocity);
         }
     }
 
