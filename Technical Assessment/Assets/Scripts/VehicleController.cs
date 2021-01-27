@@ -8,12 +8,18 @@ public class VehicleController : MonoBehaviour
     private List<Transform> nodes;
     private int currentNode = 0;
     public float maxSteerAngle = 45f;
+    public float maxBrakeTorque = 150f;
     public WheelCollider wheelFL;
     public WheelCollider wheelFR;
+    public WheelCollider wheelBR;
+    public WheelCollider wheelBL;
     public float torque = 10f;
     public float maxMotorTorque = 30f;
     public float currentSpeed;
     public float maxSpeed = 100f;
+    public Vector3 centreOfMass;
+    public bool isBraking = false;
+    public float brakingRange = 10.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -30,12 +36,31 @@ public class VehicleController : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        Vector3 fwd = transform.TransformDirection(Vector3.forward);
+        bool ray1 = Physics.Raycast(transform.position, fwd, out RaycastHit hit1, brakingRange);
+        bool ray2 = Physics.Raycast(transform.position + new Vector3(0.2f, 0f, 0f), fwd, out RaycastHit hit2, brakingRange);
+        bool ray3 = Physics.Raycast(transform.position - new Vector3(0.2f, 0f, 0f), fwd, out RaycastHit hit3, brakingRange);
+
+
+        if ((ray1 && hit1.transform.CompareTag("Pedestrian")) || (ray1 && hit2.transform.CompareTag("Pedestrian")) || (ray1 && hit3.transform.CompareTag("Pedestrian")))
+        {
+            isBraking = true;
+        }
+        else
+        {
+            isBraking = false;
+        }
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {
         Steering();
         Driving();
         CheckWaypointDistance();
+        Braking();
     }
 
     private void Steering()
@@ -75,6 +100,20 @@ public class VehicleController : MonoBehaviour
             {
                 currentNode++;
             }
+        }
+    }
+
+    private void Braking()
+    {
+        if (isBraking)
+        {
+            wheelBL.brakeTorque = maxBrakeTorque;
+            wheelBR.brakeTorque = maxBrakeTorque;
+        }
+        else
+        {
+            wheelBL.brakeTorque = 0;
+            wheelBR.brakeTorque = 0;
         }
     }
 }
