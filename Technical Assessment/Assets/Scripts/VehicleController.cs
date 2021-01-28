@@ -5,6 +5,9 @@ using UnityEngine;
 public class VehicleController : MonoBehaviour
 {
     public Transform path;
+    public Transform leftDetector;
+    public Transform rightDetector;
+    public Transform middleDetector;
     private List<Transform> nodes;
     private int currentNode = 0;
     public float maxSteerAngle = 45f;
@@ -20,6 +23,7 @@ public class VehicleController : MonoBehaviour
     public Vector3 centreOfMass;
     public bool isBraking = false;
     public float brakingRange = 10.0f;
+    public bool inJunction;
 
     // Start is called before the first frame update
     void Start()
@@ -38,13 +42,21 @@ public class VehicleController : MonoBehaviour
 
     private void Update()
     {
-        Vector3 fwd = transform.TransformDirection(Vector3.forward);
-        bool ray1 = Physics.Raycast(transform.position, fwd, out RaycastHit hit1, brakingRange);
-        bool ray2 = Physics.Raycast(transform.position + new Vector3(0.2f, 0f, 0f), fwd, out RaycastHit hit2, brakingRange);
-        bool ray3 = Physics.Raycast(transform.position - new Vector3(0.2f, 0f, 0f), fwd, out RaycastHit hit3, brakingRange);
+        bool ray1 = Physics.Raycast(middleDetector.position, middleDetector.TransformDirection(Vector3.forward), out RaycastHit hit1, brakingRange);
+        bool ray2 = Physics.Raycast(leftDetector.position, leftDetector.TransformDirection(Vector3.forward), out RaycastHit hit2, brakingRange);
+        bool ray3 = Physics.Raycast(rightDetector.position, rightDetector.TransformDirection(Vector3.forward), out RaycastHit hit3, brakingRange);
 
+        Debug.DrawRay(middleDetector.position, middleDetector.TransformDirection(Vector3.forward), Color.white);
+        Debug.DrawRay(leftDetector.position, leftDetector.TransformDirection(Vector3.forward), Color.white);
+        Debug.DrawRay(rightDetector.position, rightDetector.TransformDirection(Vector3.forward), Color.white);
 
-        if ((ray1 && hit1.transform.CompareTag("Pedestrian")) || (ray1 && hit2.transform.CompareTag("Pedestrian")) || (ray1 && hit3.transform.CompareTag("Pedestrian")))
+        if ((ray1 && (hit1.transform.CompareTag("Pedestrian") || hit1.transform.CompareTag("Vehicle"))) 
+            || (ray2 && (hit2.transform.CompareTag("Pedestrian") || hit2.transform.CompareTag("Vehicle"))) 
+            || (ray3 && (hit3.transform.CompareTag("Pedestrian") || hit1.transform.CompareTag("Vehicle"))))
+        {
+            isBraking = true;
+        }
+        else if (inJunction)
         {
             isBraking = true;
         }
