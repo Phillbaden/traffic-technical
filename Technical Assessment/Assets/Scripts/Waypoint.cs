@@ -15,7 +15,7 @@ public class Waypoint : MonoBehaviour
     [Range(0f, 1f)]
     public float branchRatio = 0.5f;
 
-    public Vector3 GetPosition()
+    public Vector3 GetPosition() // Definition of a waypoint for a pedestrian.
     {
         Vector3 minBound = transform.position + transform.right * width / 2f;
         Vector3 maxBound = transform.position - transform.right * width / 2f;

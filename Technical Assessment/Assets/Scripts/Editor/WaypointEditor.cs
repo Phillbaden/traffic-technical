@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 [InitializeOnLoad()]
-public class WaypointEditor
+public class WaypointEditor // Simple waypoint editor visualization for the path the pedestrians can take
 {
     [DrawGizmo(GizmoType.NonSelected | GizmoType.Selected | GizmoType.Pickable)]
     public static void OnDrawSceneGizmo(Waypoint waypoint, GizmoType gizmoType)

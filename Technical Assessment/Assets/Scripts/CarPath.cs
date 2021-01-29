@@ -9,13 +9,13 @@ public class CarPath : MonoBehaviour
     public float sphereRadius;
     private List<Transform> nodes = new List<Transform>();
 
-    private void OnDrawGizmos()
+    private void OnDrawGizmos() // Visualization of the pathway for a car to travel
     {
         Gizmos.color = lineColor;
         Transform[] pathTransforms = GetComponentsInChildren<Transform>();
         nodes = new List<Transform>();
 
-        for (int i = 0; i < pathTransforms.Length; i++)
+        for (int i = 0; i < pathTransforms.Length; i++) // Adds all the nodes to the path
         {
             if (pathTransforms[i] != transform)
             {
@@ -23,7 +23,7 @@ public class CarPath : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < nodes.Count; i++)
+        for (int i = 0; i < nodes.Count; i++) // Assigns which node is the current or previous one
         {
             Vector3 currentNode = nodes[i].position;
             Vector3 previousNode = Vector3.zero;

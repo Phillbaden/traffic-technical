@@ -20,18 +20,18 @@ public class WaypointNavigator : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void Update() // The entire method is used simply to assign the next waypoint the peds need to traverse. 
     {
         if (controller.reachedDestination)
         {
-            bool shouldBranch = false;
+            bool shouldBranch = false; 
 
-            if (currentWaypoint.branches != null && currentWaypoint.branches.Count > 0)
+            if (currentWaypoint.branches != null && currentWaypoint.branches.Count > 0) // Branching is decided randomly
             {
                 shouldBranch = Random.Range(0f, 1f) <= currentWaypoint.branchRatio ? true : false;
             }
 
-            if (shouldBranch)
+            if (shouldBranch) // Branching will change the order of the waypoints depending on the direction they are moving
             {
                 currentWaypoint = currentWaypoint.branches[Random.Range(0, currentWaypoint.branches.Count - 1)];
             }

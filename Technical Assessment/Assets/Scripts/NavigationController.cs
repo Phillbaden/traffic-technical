@@ -14,13 +14,13 @@ public class NavigationController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        movementSpeed = Random.Range(0.2f, 0.5f);
+        movementSpeed = Random.Range(0.2f, 0.5f); // Assigns random speeds to each pedestrian on spawn, to better simulate actual traffic
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (transform.position != destination)
+        if (transform.position != destination) // Rotates the pedestrians and moves them to the next waypoint in the chain
         {
             Vector3 destinationDirection = destination - transform.position;
             destinationDirection.y = 0;
@@ -48,6 +48,7 @@ public class NavigationController : MonoBehaviour
         }
 
         //Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward), Color.white);
+        // Small optimization in traffic avoidance. The peds will stop if they see a car in front of them for a few seconds then try to move out of the way using a coroutine. Requires refinement
         if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out RaycastHit hit, 1f) && hit.transform.CompareTag("Vehicle"))
         {
             StartCoroutine(WalkTimer());
@@ -58,7 +59,7 @@ public class NavigationController : MonoBehaviour
         }
     }
 
-    public void SetDestination(Vector3 destination)
+    public void SetDestination(Vector3 destination) // Method to set the destination of the next waypoint
     {
         this.destination = destination;
         reachedDestination = false;

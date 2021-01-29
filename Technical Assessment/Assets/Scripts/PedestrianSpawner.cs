@@ -13,7 +13,7 @@ public class PedestrianSpawner : MonoBehaviour
         StartCoroutine(Spawn());
     }
 
-    IEnumerator Spawn()
+    IEnumerator Spawn() // Spawns the pedestrians at random waypoints along the route
     {
         int count = 0;
         while (count < pedestriansToSpawn)

@@ -6,7 +6,7 @@ using UnityEngine;
 public class WaypointManagerWindow : EditorWindow
 {
     [MenuItem("Tools/Waypoint Editor")]
-   public static void Open()
+   public static void Open() // A waypoint editor tool window to create new waypoints or branches for the pedestrians
     {
         GetWindow<WaypointManagerWindow>();
     }
